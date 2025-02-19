@@ -415,7 +415,7 @@ fun TreeCard(tree: Tree, onCardClick: (Tree) -> Unit) {
 
                         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
                             Text(
-                                text = "10 شجرة :Islam Slimani",
+                                text = "99 شجرة :Islam Slimani",
                                 fontSize = 11.sp,
                                 fontWeight = FontWeight.Light,
                                 color = Color.Gray
