@@ -166,12 +166,6 @@ fun HomeScreen(modifier: Modifier, treeViewModel: TreeViewModel) {
 
     var selectedTree by remember { mutableStateOf<Tree?>(null) }
 
-    selectedTree?.let { tree ->
-        TreeDetailsDialog(tree = tree) {
-            selectedTree = null
-        }
-    }
-
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -249,27 +243,6 @@ fun HomeScreen(modifier: Modifier, treeViewModel: TreeViewModel) {
             }
         }
     }
-}
-@Composable
-fun TreeDetailsDialog(tree: Tree, onDismiss: () -> Unit) {
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text("Tree Details") },
-        text = {
-            Column {
-                Text("Tree Name: ${tree.name}")
-                Text("Status: ${tree.status}")
-                Text("Type: ${tree.type}")
-                Text("Location: ${tree.coordinates.first}, ${tree.coordinates.second}")
-                Text("Last Irrigation: ${tree.lastIrrigationAction}")
-            }
-        },
-        confirmButton = {
-            TextButton(onClick = onDismiss) {
-                Text("Close")
-            }
-        }
-    )
 }
 
 
