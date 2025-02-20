@@ -148,7 +148,7 @@ fun ContentScreen(modifier: Modifier = Modifier, selectedIndex: Int, treeViewMod
         1 -> MapScreen()
         2 -> AddScreen()
         3 -> IrrigationScreen()
-        4 -> HomeScreen(modifier,treeViewModel) // ✅ Fixed: No infinite recursion
+        4 -> HomeScreen(modifier,treeViewModel)
     }
 }
 @OptIn(ExperimentalMaterial3Api::class)
@@ -230,20 +230,18 @@ fun HomeScreen(modifier: Modifier, treeViewModel: TreeViewModel) {
                 if (searchQuery.isNotEmpty() && filteredTrees.isNotEmpty()) {
                     LazyColumn(modifier = Modifier.fillMaxSize().padding(bottom = 110.dp)) {
                         items(filteredTrees) { tree ->
-                            TreeCard(tree = tree, onCardClick = { selectedTree = it }) // Pass tree and click handler
+                            TreeCard(tree = tree, onCardClick = { selectedTree = it })
                             Spacer(Modifier.height(12.dp))
                         }
                     }
                 } else if (filteredTrees.isEmpty()) {
                     Column(modifier = Modifier.fillMaxSize().padding(bottom = 100.dp), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
-                        Image(modifier = Modifier.size(80.dp), painter = painterResource(R.drawable.ic_error), contentDescription = "Error")
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Text(text = "No Results Found!", fontSize = 32.sp, fontWeight = FontWeight.Light, color = Color.Gray)
+                        Text(text = "No Tree Found !", fontSize = 32.sp, fontWeight = FontWeight.Light, color = Color.Red)
                     }
                 } else {
                     LazyColumn(modifier = Modifier.fillMaxSize().padding(bottom = 110.dp)) {
                         items(treesList) { tree ->
-                            TreeCard(tree = tree, onCardClick = { selectedTree = it }) // Pass tree and click handler
+                            TreeCard(tree = tree, onCardClick = { selectedTree = it })
                             Spacer(Modifier.height(12.dp))
                         }
                     }
