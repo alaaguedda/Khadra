@@ -15,7 +15,20 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.khadra.presentation.viewmodel.AddTreeViewModel
-
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.runtime.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 @Composable
 fun AddScreen(
     modifier: Modifier = Modifier,
@@ -38,11 +51,39 @@ fun AddScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
+            .padding(16.dp)
+            .verticalScroll(rememberScrollState()), // Makes it scrollable
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
-    ) {
+    )
+    {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(80.dp)
+                .background(
+                    if (state.imageUri.isNotEmpty()) Color(0xFF4CAF50) else Color(0xFFEEEEEE), // Green if image is selected
+                    shape = RoundedCornerShape(8.dp)
+                )
+                .border(2.dp, Color.Black, shape = RoundedCornerShape(8.dp))
+                .clickable {
+                    // Launch the image picker
+                    imagePicker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+                },
+            contentAlignment = Alignment.Center
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(
+                    imageVector = Icons.Default.Add,
+                    contentDescription = "Add Photo",
+                    tint = Color.Black
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text("Photo", fontSize = 18.sp, color = Color.Black)
+            }
+        }
 
+        Spacer(modifier = Modifier.height(16.dp))
         OutlinedTextField(
             value = state.name,
             onValueChange = { viewModel.onEvent(AddTreeViewModel.AddTreeEvent.NameChanged(it)) },
@@ -88,43 +129,53 @@ fun AddScreen(
             modifier = Modifier.fillMaxWidth()
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+
 
         // Image Picker Button
-        Button(
-            onClick = {
-                // Launch the image picker
-                imagePicker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
-            },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text("Pick Image")
-        }
 
 
-        if (state.imageUri.isNotEmpty()) {
-            Text(
-                text = "Selected Image: ${state.imageUri}",
-                modifier = Modifier.padding(top = 16.dp)
-            )
-        }
 
-        Spacer(modifier = Modifier.height(24.dp))
+
+
+        Spacer(modifier = Modifier.height(18.dp))
 
         // Submit Button
-        Button(
-            onClick = { viewModel.onEvent(AddTreeViewModel.AddTreeEvent.Submit) },
-            enabled = !state.isLoading
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(60.dp) // Increased height
+                .background(
+                    if (state.isLoading) Color.Gray else Color(0xFF4CAF50), // Green when enabled, Gray when loading
+                    shape = RoundedCornerShape(28.dp)
+                )
+                .clickable(enabled = !state.isLoading) {
+                    viewModel.onEvent(AddTreeViewModel.AddTreeEvent.Submit)
+                },
+            contentAlignment = Alignment.Center
         ) {
-            Text(if (state.isLoading) "Adding..." else "Add Tree")
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(
+                    imageVector = Icons.Default.Add,
+                    contentDescription = "Add Tree",
+                    tint = Color.White
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = if (state.isLoading) "Adding..." else "Add Tree",
+                    color = Color.White,
+                    fontSize = 18.sp
+                )
+            }
         }
 
-        // Error Message
+
         if (state.error != null) {
             Text(
+
                 text = state.error!!,
                 color = MaterialTheme.colorScheme.error,
                 modifier = Modifier.padding(top = 16.dp)
+
             )
         }
 
